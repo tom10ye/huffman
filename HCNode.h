@@ -30,6 +30,9 @@ public:
      *  And we want to break ties deterministically.
      */
     bool operator<(const HCNode& other);
+
+
+    ~HCNode();
 };
 
 /** For printing an HCNode to an ostream

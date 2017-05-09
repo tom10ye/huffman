@@ -6,11 +6,11 @@ LDFLAGS=-g
 
 all: compress uncompress
 
-compress: BitInputStream.o BitOutputStream.o HCNode.o HCTree.o
+compress:  HCNode.o HCTree.o #BitInputStream.o BitOutputStream.o
 
-uncompress: BitInputStream.o BitOutputStream.o HCNode.o HCTree.o
+uncompress:  HCNode.o HCTree.o #BitInputStream.o BitOutputStream.o
 
-HCTree.o: BitInputStream.h BitOutputStream.h HCNode.h HCTree.h
+HCTree.o:  HCNode.h HCTree.h #BitInputStream.h BitOutputStream.h
 
 HCNode.o: HCNode.h
 
@@ -20,3 +20,4 @@ BitInputStream.o: BitInputStream.h
 
 clean:
 	rm -f compress uncompress *.o core*
+
