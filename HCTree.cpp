@@ -70,19 +70,52 @@ int HCTree::decode(ifstream& in) const{
 	HCNode* node = root;
 	while(node->c0 != NULL){//huffman tree node must have either no child or two children
 		char out_char;
-		in >> out_char;
+		out_char = in.get();
 		if(out_char == '0'){
 			node = node->c0;
 		}else if(out_char == '1'){
 			node = node->c1;
 		}else return -1;
-		// int value = in.get();
-		// if(value == 0){
-		// 	node = node->c0;
-		// }else if(value == 1){
-		// 	node = node->c1;
-		// }else return -1;
+	}
+	return (int)node->symbol;
+}
 
+//final submission
+
+void HCTree::encode(byte symbol, BitOutputStream& out) const{
+	HCNode* target = leaves[(int)symbol];
+	if(target == root){
+		out.writeBit(0);
+		return;
+	}
+	if(target->count == 0) return; 
+
+	stack<char> stack;
+
+	while(target->p != NULL){
+		if(target->p->c0 == target){
+			stack.push('0');
+		}else{
+			stack.push('1');
+		}
+		target = target->p;
+	}
+
+	while(!stack.empty()){
+		out.writeBit(stack.top()-'0');
+		stack.pop();
+	}
+}
+
+int HCTree::decode(BitInputStream& in) const{
+	HCNode* node = root;
+	while(node->c0 != NULL){//huffman tree node must have either no child or two children
+		int bit_int = in.readBit();
+		if(bit_int == 0){
+			node = node->c0;
+		}else if(bit_int == 1){
+			node = node->c1;
+		}else return -1;
 	}
 	return (int)node->symbol;
 }

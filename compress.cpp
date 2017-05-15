@@ -1,5 +1,7 @@
 #include "HCNode.h"
 #include "HCTree.h"
+#include "BitInputStream.h"
+#include "BitOutputStream.h"
 #include <iostream>
 #include <vector>
 
@@ -13,6 +15,8 @@ int main(int argc, char* argv[]){
 
 	ifstream in;
 	ofstream out;
+	//final submission add on
+	BitOutputStream bitOut(out);
 
 	in.open(infile, ios::in | ios::binary);
 
@@ -21,7 +25,7 @@ int main(int argc, char* argv[]){
 	// A bug arise here in in.eof()
 	// if it is the parameter of 
 	while(true){
-		in>>letter_byte;
+		letter_byte = in.get();
 		if(in.eof()) break;
 		int idx = (int)letter_byte;
 		freqs[idx] =  freqs[idx] + 1;
@@ -39,17 +43,27 @@ int main(int argc, char* argv[]){
 	//print header as lines of freqs[]
 	//the line index is the ascii code, and the line itself is the frequency number of this ascii number
 	for(int i = 0; i<256 ;i++){
-		out<<freqs[i]<<endl;
+		//out<<"write the frequency"<<endl;
+		//for(int i=0 ;i<9;i++) bitOut.writeBit(1);
+		int freq_int = freqs[i];
+		for(int j = 0; j<32; j++){
+			int bit = (freq_int >> (31-j)) & 1;// here we do not change line after a freq has been write
+			//cout<<bit;
+			bitOut.writeBit(bit);
+		}
+		//cout<<endl;
 	}
+
 	//print the encoded message
-	//out<<"print the encoded message"<<endl;
-	in>>letter_byte;
-	while(!in.eof()){
-		//if(in.eof()) break;
-		tree.encode(letter_byte, out);
-		//out<<" "<<endl;
-		in>>letter_byte;
+	while(true){
+		letter_byte = in.get();
+		if(in.eof()) break;
+		tree.encode(letter_byte, bitOut);
 	}
+
+	//clear the rest
+	bitOut.flush();
+
 	out.close();
 	in.close();
 

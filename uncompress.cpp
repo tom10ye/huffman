@@ -1,5 +1,7 @@
 #include "HCNode.h"
 #include "HCTree.h"
+#include "BitInputStream.h"
+#include "BitOutputStream.h"
 #include <iostream>
 #include <vector>
 
@@ -13,14 +15,22 @@ int main(int argc, char* argv[]){
 
 	ifstream in;
 	ofstream out;
+	//final submission add on
+	BitInputStream bitIn(in);
 
 	in.open(infile, ios::in | ios::binary);
 
 	//read  header
-	int frequency_int;
-	for(int i = 0; i < 256; i++){
-		in>>frequency_int;
+	for(int i = 0; i <256; i++){
+		//cout<<i<<endl;
+		int frequency_int = 0;
+		for(int j = 0; j<32; j++){
+			int bit = bitIn.readBit();
+			frequency_int = frequency_int | (bit<<(31-j));
+		}
+		//in>>frequency_int;
 		freqs[i] = frequency_int;
+		//cout<<frequency_int<<endl;
 	}
 
 	//build tree
@@ -30,12 +40,14 @@ int main(int argc, char* argv[]){
 	out.open(outfile, ios::out | ios::binary);
 	
 	//print the decoded message
+	// In the checkpoint we need to change a line because after we read 256 integer, the posi will hold at the change line symbol
+	//in.get();
 
-	while(!in.eof()){
-		//out<<"enter the while loop"<<endl;
-		int letter_int = tree.decode(in);
+	while(true){
+		//cout<<"enter the while loop"<<endl;
+		int letter_int = tree.decode(bitIn);
 		if(in.eof()) break;
-		//out<< letter_int <<endl;
+		//cout<< letter_int <<endl;
 		if(letter_int == -1) break;
 		out<<(byte)letter_int;
 	}
