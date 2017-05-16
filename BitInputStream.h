@@ -37,5 +37,7 @@ class BitInputStream{
 		*/
 		int readBit();
 
+		int readByte();
+
 };
 #endif

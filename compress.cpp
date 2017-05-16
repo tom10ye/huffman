@@ -40,8 +40,10 @@ int main(int argc, char* argv[]){
     in.open(infile, ios::in | ios::binary);
 	out.open(outfile, ios::out | ios::binary);
 	
+	//NAIVE HEADER
 	//print header as lines of freqs[]
 	//the line index is the ascii code, and the line itself is the frequency number of this ascii number
+	/*
 	for(int i = 0; i<256 ;i++){
 		//out<<"write the frequency"<<endl;
 		//for(int i=0 ;i<9;i++) bitOut.writeBit(1);
@@ -53,6 +55,19 @@ int main(int argc, char* argv[]){
 		}
 		//cout<<endl;
 	}
+	*/
+
+	//CLEVER HEADER
+	int uniqueNum = 0;
+	for(int i = 0; i < 256; i++){
+	    if(freqs[i] != 0){
+	      uniqueNum = uniqueNum + 1;
+	    }
+	}
+	bitOut.writeByte(uniqueNum);
+	//out<<"finish write the total unique number"<<endl;
+	tree.printCleverHeader(bitOut);
+
 
 	//print the encoded message
 	while(true){

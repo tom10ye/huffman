@@ -27,3 +27,11 @@ int BitInputStream::readBit() {
 
 	return bit;
 }
+
+int BitInputStream::readByte(){
+	// int res = 0;
+	// for(int iter=0; iter<8;iter++){
+	// 	res = res | this->readBit()<<(7-iter);
+	// }
+	return in.get();
+}

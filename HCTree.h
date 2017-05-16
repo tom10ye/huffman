@@ -84,6 +84,12 @@ public:
      */
     int decode(ifstream& in) const;
 
+    void printCleverHeader(BitOutputStream& out) const;
+
+    void helper_traverse(HCNode* node, int depth, BitOutputStream& out) const;
+
+    void readCleverHeader(BitInputStream& in, int uniqueNum);
+
 };
 
 #endif // HCTREE_H

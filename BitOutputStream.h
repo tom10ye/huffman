@@ -37,5 +37,7 @@ class BitOutputStream {
 		*/														
 		void writeBit(int i);
 
+		void writeByte(int i);
+
 };
 #endif

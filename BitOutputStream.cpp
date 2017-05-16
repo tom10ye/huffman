@@ -19,3 +19,10 @@ void BitOutputStream::writeBit(int i){
 	// Increment the index
 	nbits = nbits+1;
 }
+
+void BitOutputStream::writeByte(int i){
+	// for(int iter=0; iter<8;iter++){
+	// 	out->writeBit((i>>(7-iter)) & 1);
+	// }
+	out.put(i);
+}

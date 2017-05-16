@@ -20,7 +20,8 @@ int main(int argc, char* argv[]){
 
 	in.open(infile, ios::in | ios::binary);
 
-	//read  header
+	//Naive read  header
+	/*
 	for(int i = 0; i <256; i++){
 		//cout<<i<<endl;
 		int frequency_int = 0;
@@ -32,10 +33,13 @@ int main(int argc, char* argv[]){
 		freqs[i] = frequency_int;
 		//cout<<frequency_int<<endl;
 	}
+	*/
 
 	//build tree
 	HCTree tree;
-	tree.build(freqs);
+	//tree.build(freqs);
+	int uniqueNum = bitIn.readByte();
+	tree.readCleverHeader(bitIn, uniqueNum);
 
 	out.open(outfile, ios::out | ios::binary);
 	
@@ -46,6 +50,7 @@ int main(int argc, char* argv[]){
 	while(true){
 		//cout<<"enter the while loop"<<endl;
 		int letter_int = tree.decode(bitIn);
+		//cout<<"pass the first decoding"<<endl;
 		if(in.eof()) break;
 		//cout<< letter_int <<endl;
 		if(letter_int == -1) break;
