@@ -8,10 +8,9 @@
 using namespace std;
 
 int main(int argc, char* argv[]){
+	//1.initilize the structue and varuable we are going to use
 	char* infile = argv[1];
 	char* outfile = argv[2];
-
-	vector<int> freqs(256,0);
 
 	ifstream in;
 	ofstream out;
@@ -19,7 +18,9 @@ int main(int argc, char* argv[]){
 	BitInputStream bitIn(in);
 
 	in.open(infile, ios::in | ios::binary);
+	vector<int> freqs(256,0);
 
+	//2.read tree header and build tree
 	//Naive read  header
 	/*
 	for(int i = 0; i <256; i++){
@@ -35,7 +36,7 @@ int main(int argc, char* argv[]){
 	}
 	*/
 
-	//build tree
+	//initialize tree
 	HCTree tree;
 	//tree.build(freqs);
 	int totalNum = bitIn.readInt();
@@ -44,9 +45,10 @@ int main(int argc, char* argv[]){
 
 	out.open(outfile, ios::out | ios::binary);
 	
-	//print the decoded message
+	//3.print the decoded message
 	// In the checkpoint we need to change a line because after we read 256 integer, the posi will hold at the change line symbol
 	//in.get();
+	//In the final submission, we use a counter to count the number of characters that have been decoded, with the limitation of the totalNum
 	int alreadyDecodeNum = 0;
 	while(alreadyDecodeNum < totalNum){
 		//cout<<"enter the while loop"<<endl;

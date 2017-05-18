@@ -123,7 +123,8 @@ int HCTree::decode(BitInputStream& in) const{
 	return (int)node->symbol;
 }
 //CleverHeader format:
-//xxxx(symbol for 1 byte)xxxx(depth for 1 byte)
+//xx4(totalNumber for 4byte)xx(uniqueNumber for 1byte)
+//xx(symbol for 1 byte)xx(depth for 1 byte)
 // here we encode depth for 1 byte because in ascii coding there will not be a deeper tree more than 256
 void HCTree::printCleverHeader(BitOutputStream& out) const{
 	helper_traverse(root,0,out);
@@ -136,14 +137,14 @@ void HCTree::helper_traverse(HCNode* node, int depth, BitOutputStream& out) cons
       out.writeByte(depth);
       return;
     }
-    // always take left before right
+    // always take left before right, you can think it as pre/in/post order traverse the tree and remove all the non-leaf nodes
     helper_traverse(node->c0, depth+1, out);	
 	helper_traverse(node->c1, depth+1, out); 
 }
 
 
 //This function actually read and build the tree
-//The algorithm is that always go left as far as the depth regulating us, and simutaneously intialize the node on the path,
+//The algorithm is that always go left as far as the depth regulating us, and simutaneously intialize the nodes on the path,
 //After reaching the leaf, store the symbol and pop up to a node whose right child is NULL
 void HCTree::readCleverHeader(BitInputStream& in, int uniqueNum) {
 	
@@ -182,7 +183,7 @@ void HCTree::readCleverHeader(BitInputStream& in, int uniqueNum) {
 
 
 	    //if there is only one node in this tree, we do not need to move the ptr
-	    //other wise make the curr ptr point to the parent of the position we have aget
+	    //other wise make the curr ptr point to the parent of the position we have got to
 	    if(curr->p != NULL){
 		    curr = curr->p;
 		    currDepth = currDepth - 1;

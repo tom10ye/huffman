@@ -28,6 +28,7 @@ int BitInputStream::readBit() {
 	return bit;
 }
 
+// used to read a byte, the logic is as same as in bitoutputstream
 int BitInputStream::readByte(){
 	// int res = 0;
 	// for(int iter=0; iter<8;iter++){
@@ -44,6 +45,7 @@ int BitInputStream::readByte(){
 	return res;
 }
 
+//used to read an Integer
 int BitInputStream::readInt(){
 	int res = 0;
 	int bit;

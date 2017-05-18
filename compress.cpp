@@ -8,22 +8,23 @@
 using namespace std;
 
 int main(int argc, char* argv[]){
+	
+	//1.initilize the structue and varuable we are going to use
 	char* infile = argv[1];
 	char* outfile = argv[2];
-
-	vector<int> freqs(256,0);
-
 	ifstream in;
 	ofstream out;
 	//final submission add on
-	BitOutputStream bitOut(out);
+	BitOutputStream bitOut(out);//instantiate BitOutputStream with the initial parameter ofstream
 
 	in.open(infile, ios::in | ios::binary);
 
 	byte letter_byte;
+	vector<int> freqs(256,0);//for store a statistic of 256 ascii symbols
 
 	// A bug arise here in in.eof()
-	// if it is the parameter of 
+	// if it is the parameter of while loop, it will finally cause repeat of the last word, the exact situation is in the report checkpoint
+	//2.Statistic 
 	while(true){
 		letter_byte = in.get();
 		//cout<<letter_byte<<endl;
@@ -35,13 +36,15 @@ int main(int argc, char* argv[]){
 
 	in.close();
 
-	//build the tree
+	//3.build the tree
 	HCTree tree;
 	tree.build(freqs);
     
     in.open(infile, ios::in | ios::binary);
 	out.open(outfile, ios::out | ios::binary);
 	
+
+	//4.make header
 	//NAIVE HEADER
 	//print header as lines of freqs[]
 	//the line index is the ascii code, and the line itself is the frequency number of this ascii number
@@ -60,6 +63,16 @@ int main(int argc, char* argv[]){
 	*/
 
 	//CLEVER HEADER
+	//In the clever header, we first need to record the total number of symbols and unique symbols in our header
+	//the total number is used to limit the reading of body not beyond to the flushed 0s
+	//the unique number is used to limit the reading of header part
+	//And then record each leaf node's symbol and its depth from left to right (it was just like pre/in/post traverse the tree and remove the non-leaf nodes)
+	//At the decoder. use a specific algorithm to rebuild the tree through this sequence
+	//Why can we serialize a tree like this? I have done a lot of research and serilization a binary tree is even a hard problem on leetcode
+	//Becasue huffman tree is a full tree. It does not tolerate a node with only one child.
+	//Thus we can use this very specific algorithm to rebuild the tree only by the sequence and depth of the leaf node
+	//I will illustrate reconstruction algorithm in the corresponding part.
+
 	int totalNum = 0;
 	int uniqueNum = 0;
 	for(int i = 0; i < 256; i++){
@@ -70,20 +83,23 @@ int main(int argc, char* argv[]){
 	}
 	//cout<<"totalNum is "<<totalNum<<endl;
 	bitOut.writeInt(totalNum);
-	bitOut.flush();
-	bitOut.writeByte(uniqueNum);
+	//bitOut.flush();
+	bitOut.writeByte(uniqueNum); //here we only need a byte to store the unique symbols number, because it will not go beyond 256 for ascii code
 	//out<<"finish write the total unique number"<<endl;
 	tree.printCleverHeader(bitOut);
 
 
-	//print the encoded message
+	//5.print the encoded message
 	while(true){
 		letter_byte = in.get();
 		if(in.eof()) break;
 		tree.encode(letter_byte, bitOut);
 	}
 
-	//clear the rest
+	//6.clear the rest
+	//Imagine that if you only have two symbols, which encoded as 0 and 1, then the two bit could not make up a byte, so you need to mannually flush the buffer at the end.
+	//How can we not decode the flushed 0s?
+	//we use the total number of symbols to limit the time of decode operations
 	bitOut.flush();
 
 	out.close();
