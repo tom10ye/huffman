@@ -26,8 +26,10 @@ int main(int argc, char* argv[]){
 	// if it is the parameter of 
 	while(true){
 		letter_byte = in.get();
+		//cout<<letter_byte<<endl;
 		if(in.eof()) break;
 		int idx = (int)letter_byte;
+		//cout<<idx<<endl;
 		freqs[idx] =  freqs[idx] + 1;
 	}
 
@@ -58,12 +60,17 @@ int main(int argc, char* argv[]){
 	*/
 
 	//CLEVER HEADER
+	int totalNum = 0;
 	int uniqueNum = 0;
 	for(int i = 0; i < 256; i++){
 	    if(freqs[i] != 0){
 	      uniqueNum = uniqueNum + 1;
+	      totalNum = totalNum + freqs[i];//record the total symbol number to deal with the flush bug
 	    }
 	}
+	//cout<<"totalNum is "<<totalNum<<endl;
+	bitOut.writeInt(totalNum);
+	bitOut.flush();
 	bitOut.writeByte(uniqueNum);
 	//out<<"finish write the total unique number"<<endl;
 	tree.printCleverHeader(bitOut);

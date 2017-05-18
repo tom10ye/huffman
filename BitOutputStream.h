@@ -6,7 +6,7 @@ class BitOutputStream {
 
 	private:
 
-		char buf; // one byte buffer of bits
+		unsigned char buf; // one byte buffer of bits
 
 		int nbits; // how many bits have been written to buf
 
@@ -37,7 +37,9 @@ class BitOutputStream {
 		*/														
 		void writeBit(int i);
 
-		void writeByte(int i);
+		void writeByte(int integer);
+
+		void writeInt(int integer);
 
 };
 #endif

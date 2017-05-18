@@ -1,4 +1,5 @@
 #include "BitOutputStream.h"
+using namespace std;
 
 void BitOutputStream::flush(){
 	out.put(buf);
@@ -20,9 +21,21 @@ void BitOutputStream::writeBit(int i){
 	nbits = nbits+1;
 }
 
-void BitOutputStream::writeByte(int i){
-	// for(int iter=0; iter<8;iter++){
-	// 	out->writeBit((i>>(7-iter)) & 1);
-	// }
-	out.put(i);
+void BitOutputStream::writeByte(int integer){
+	//out.put(i);
+	int bit;
+	for(int i = 0;i < 8;i++){
+		bit = 1 & (integer >> (7-i));
+		//cout<<bit<<endl;
+		writeBit(bit);
+	}
+}
+
+void BitOutputStream::writeInt(int integer){
+	int bit;
+	for(int i = 0;i < 32;i++){
+		bit = 1 & (integer >> (31-i));
+		//cout<<bit<<endl;
+		writeBit(bit);
+	}
 }

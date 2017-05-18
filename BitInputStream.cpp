@@ -33,5 +33,23 @@ int BitInputStream::readByte(){
 	// for(int iter=0; iter<8;iter++){
 	// 	res = res | this->readBit()<<(7-iter);
 	// }
-	return in.get();
+	//return in.get();
+
+	int res = 0;
+	int bit;
+	for(int i = 0; i < 8; i++){
+		bit = readBit();
+		res = res | (bit << (7-i)); 
+	}
+	return res;
+}
+
+int BitInputStream::readInt(){
+	int res = 0;
+	int bit;
+	for(int i = 0; i < 32; i++){
+		bit = readBit();
+		res = res | (bit << (31-i)); 
+	}
+	return res;
 }

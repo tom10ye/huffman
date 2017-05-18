@@ -49,7 +49,7 @@ void HCTree::encode(byte symbol, ofstream& out) const{
 	}
 	if(target->count == 0) return; 
 
-	stack<char> stack;
+	stack<unsigned char> stack;
 
 	while(target->p != NULL){
 		if(target->p->c0 == target){
@@ -69,7 +69,7 @@ void HCTree::encode(byte symbol, ofstream& out) const{
 int HCTree::decode(ifstream& in) const{
 	HCNode* node = root;
 	while(node->c0 != NULL){//huffman tree node must have either no child or two children
-		char out_char;
+		unsigned char out_char;
 		out_char = in.get();
 		if(out_char == '0'){
 			node = node->c0;
@@ -90,7 +90,7 @@ void HCTree::encode(byte symbol, BitOutputStream& out) const{
 	}
 	if(target->count == 0) return; 
 
-	stack<char> stack;
+	stack<unsigned char> stack;
 
 	while(target->p != NULL){
 		if(target->p->c0 == target){

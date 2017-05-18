@@ -38,6 +38,7 @@ int main(int argc, char* argv[]){
 	//build tree
 	HCTree tree;
 	//tree.build(freqs);
+	int totalNum = bitIn.readInt();
 	int uniqueNum = bitIn.readByte();
 	tree.readCleverHeader(bitIn, uniqueNum);
 
@@ -46,8 +47,8 @@ int main(int argc, char* argv[]){
 	//print the decoded message
 	// In the checkpoint we need to change a line because after we read 256 integer, the posi will hold at the change line symbol
 	//in.get();
-
-	while(true){
+	int alreadyDecodeNum = 0;
+	while(alreadyDecodeNum < totalNum){
 		//cout<<"enter the while loop"<<endl;
 		int letter_int = tree.decode(bitIn);
 		//cout<<"pass the first decoding"<<endl;
@@ -55,6 +56,7 @@ int main(int argc, char* argv[]){
 		//cout<< letter_int <<endl;
 		if(letter_int == -1) break;
 		out<<(byte)letter_int;
+		alreadyDecodeNum++;
 	}
 	//out<<"output finished";
 	out.close();

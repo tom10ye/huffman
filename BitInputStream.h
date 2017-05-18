@@ -6,7 +6,7 @@ class BitInputStream{
 
 	private:
 
-		char buf; // one byte buffer of bits
+		unsigned char buf; // one byte buffer of bits
 		int nbits;// how many bits have been read from buf
 		std::istream & in; //the input stream to use
 
@@ -38,6 +38,8 @@ class BitInputStream{
 		int readBit();
 
 		int readByte();
+
+		int readInt();
 
 };
 #endif
